@@ -1,0 +1,84 @@
+[
+  {
+    "incident_id": "INC-0001",
+    "camera_id": "CAM-ENT-01",
+    "zone": "apartment_lobby",
+    "timestamp": "2026-04-11T09:12:10Z",
+    "label": "littering",
+    "confidence": 0.88,
+    "severity": "medium",
+    "trigger_reasons": [
+      "motion_in_roi",
+      "new_object_detected",
+      "drop_pattern_detected",
+      "stationary_object_threshold_exceeded",
+      "person_left_object_behind",
+      "person_object_separation_detected"
+    ],
+    "rationale": "A small discard-like object appeared through a drop pattern and stayed in the cleanup zone.",
+    "recommended_action": "Queue housekeeping alert and log repeat hotspot activity.",
+    "object_label": "cup",
+    "notes": "Disposable cup appeared near seating edge after a person exited frame."
+  },
+  {
+    "incident_id": "INC-0002",
+    "camera_id": "CAM-STN-03",
+    "zone": "station_waiting_area",
+    "timestamp": "2026-04-11T09:14:45Z",
+    "label": "unattended_item",
+    "confidence": 0.9,
+    "severity": "high",
+    "trigger_reasons": [
+      "motion_in_roi",
+      "new_object_detected",
+      "stationary_object_threshold_exceeded",
+      "person_left_object_behind",
+      "person_object_separation_detected"
+    ],
+    "rationale": "The item remained stationary after the nearby person left or moved beyond the safety distance.",
+    "recommended_action": "Alert security staff for unattended-object verification.",
+    "object_label": "backpack",
+    "notes": "Backpack remains near a bench after the nearby person left the zone."
+  },
+  {
+    "incident_id": "INC-0003",
+    "camera_id": "CAM-PARK-02",
+    "zone": "parking_dropoff",
+    "timestamp": "2026-04-11T09:19:02Z",
+    "label": "illegal_dumping",
+    "confidence": 0.93,
+    "severity": "high",
+    "trigger_reasons": [
+      "motion_in_roi",
+      "new_object_detected",
+      "stationary_object_threshold_exceeded",
+      "person_left_object_behind",
+      "possible_vehicle_dumping"
+    ],
+    "rationale": "A new object appeared after a vehicle-related event and remained in the monitored zone.",
+    "recommended_action": "Dispatch site staff and retain clip for audit review.",
+    "object_label": "box",
+    "notes": "A cardboard box appeared in the lane after a vehicle paused and left."
+  },
+  {
+    "incident_id": "INC-0005",
+    "camera_id": "CAM-CIN-05",
+    "zone": "cinema_exit",
+    "timestamp": "2026-04-11T09:31:08Z",
+    "label": "littering",
+    "confidence": 0.88,
+    "severity": "medium",
+    "trigger_reasons": [
+      "motion_in_roi",
+      "new_object_detected",
+      "drop_pattern_detected",
+      "stationary_object_threshold_exceeded",
+      "person_left_object_behind",
+      "person_object_separation_detected"
+    ],
+    "rationale": "A small discard-like object appeared through a drop pattern and stayed in the cleanup zone.",
+    "recommended_action": "Queue housekeeping alert and log repeat hotspot activity.",
+    "object_label": "wrapper",
+    "notes": "Snack wrapper dropped during crowd exit and remained after traffic cleared."
+  }
+]

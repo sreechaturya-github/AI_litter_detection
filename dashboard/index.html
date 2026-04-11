@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LitterGuard Command Center</title>
+    <style>
+      :root {
+        --bg: #07111a;
+        --panel: rgba(11, 25, 38, 0.82);
+        --panel-strong: rgba(14, 31, 46, 0.96);
+        --line: rgba(145, 200, 228, 0.16);
+        --text: #eff7fb;
+        --muted: #9ab5c6;
+        --teal: #57d4c0;
+        --amber: #ffb454;
+        --red: #ff6b6b;
+        --blue: #7db7ff;
+        --shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Avenir Next", "Segoe UI", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top left, rgba(87, 212, 192, 0.18), transparent 28%),
+          radial-gradient(circle at top right, rgba(125, 183, 255, 0.16), transparent 22%),
+          linear-gradient(180deg, #08131d 0%, #091722 52%, #061019 100%);
+      }
+
+      .shell {
+        width: min(1240px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 28px 0 56px;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .brand-mark {
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, rgba(87, 212, 192, 0.95), rgba(125, 183, 255, 0.95));
+        box-shadow: 0 12px 30px rgba(87, 212, 192, 0.28);
+      }
+
+      .eyebrow {
+        color: var(--muted);
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        margin: 0 0 4px;
+      }
+
+      h1, h2, h3, p {
+        margin: 0;
+      }
+
+      h1 {
+        font-size: clamp(2rem, 5vw, 3.4rem);
+        line-height: 0.95;
+        letter-spacing: -0.04em;
+      }
+
+      .timestamp {
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 1.4fr 0.9fr;
+        gap: 18px;
+        margin-bottom: 18px;
+      }
+
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(18px);
+      }
+
+      .hero-copy {
+        padding: 28px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-copy::after {
+        content: "";
+        position: absolute;
+        inset: auto -10% -45% 42%;
+        height: 220px;
+        background: radial-gradient(circle, rgba(87, 212, 192, 0.16), transparent 65%);
+        pointer-events: none;
+      }
+
+      .hero-copy p:last-child {
+        margin-top: 14px;
+        max-width: 58ch;
+        line-height: 1.7;
+        color: var(--muted);
+      }
+
+      .hero-stats {
+        padding: 18px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+
+      .metric {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 22px;
+        padding: 18px;
+      }
+
+      .metric .label {
+        color: var(--muted);
+        font-size: 0.84rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .metric .value {
+        margin-top: 10px;
+        font-size: 2rem;
+        font-weight: 700;
+      }
+
+      .metric .detail {
+        margin-top: 10px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 0.92fr 1.4fr;
+        gap: 18px;
+      }
+
+      .stack {
+        display: grid;
+        gap: 18px;
+      }
+
+      .section {
+        padding: 22px;
+      }
+
+      .summary-list,
+      .feed {
+        display: grid;
+        gap: 12px;
+        margin-top: 16px;
+      }
+
+      .summary-item,
+      .feed-item,
+      .incident-card {
+        background: rgba(255, 255, 255, 0.025);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 20px;
+      }
+
+      .summary-item {
+        padding: 14px 16px;
+      }
+
+      .summary-item strong {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      .summary-item span {
+        color: var(--muted);
+        line-height: 1.55;
+      }
+
+      .feed-item {
+        padding: 14px 16px;
+      }
+
+      .feed-item .time {
+        color: var(--blue);
+        font-size: 0.82rem;
+        margin-bottom: 6px;
+      }
+
+      .feed-item .meta {
+        color: var(--muted);
+        margin-top: 8px;
+        font-size: 0.92rem;
+      }
+
+      .incident-grid {
+        display: grid;
+        gap: 16px;
+        margin-top: 16px;
+      }
+
+      .incident-card {
+        padding: 18px;
+      }
+
+      .incident-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: flex-start;
+        margin-bottom: 12px;
+      }
+
+      .incident-top h3 {
+        font-size: 1.22rem;
+        text-transform: capitalize;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border-radius: 999px;
+        padding: 8px 12px;
+        font-size: 0.84rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .severity-high {
+        background: rgba(255, 107, 107, 0.14);
+        color: #ff8d8d;
+      }
+
+      .severity-medium {
+        background: rgba(255, 180, 84, 0.14);
+        color: #ffc976;
+      }
+
+      .severity-low {
+        background: rgba(87, 212, 192, 0.14);
+        color: #83f0dd;
+      }
+
+      .incident-meta {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 10px;
+        margin: 14px 0;
+      }
+
+      .meta-box {
+        padding: 12px 14px;
+        border-radius: 16px;
+        background: rgba(0, 0, 0, 0.16);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .meta-box .k {
+        color: var(--muted);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .meta-box .v {
+        margin-top: 6px;
+        font-weight: 600;
+      }
+
+      .incident-card p {
+        color: var(--muted);
+        line-height: 1.65;
+      }
+
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 14px;
+      }
+
+      .chip {
+        border-radius: 999px;
+        padding: 8px 10px;
+        background: rgba(87, 212, 192, 0.1);
+        border: 1px solid rgba(87, 212, 192, 0.16);
+        color: #b8f9ef;
+        font-size: 0.84rem;
+      }
+
+      .empty {
+        padding: 24px;
+        text-align: center;
+        color: var(--muted);
+      }
+
+      @media (max-width: 980px) {
+        .hero,
+        .layout {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .shell {
+          width: min(100% - 20px, 1240px);
+          padding-top: 18px;
+        }
+
+        .hero-copy,
+        .section {
+          padding: 18px;
+        }
+
+        .hero-stats {
+          grid-template-columns: 1fr;
+        }
+
+        .incident-top {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="topbar">
+        <div class="brand">
+          <div class="brand-mark"></div>
+          <div>
+            <p class="eyebrow">Selective CCTV Review</p>
+            <h2>LitterGuard Command Center</h2>
+          </div>
+        </div>
+        <div class="timestamp" id="timestamp">Waiting for incident data...</div>
+      </div>
+
+      <section class="hero">
+        <div class="panel hero-copy">
+          <p class="eyebrow">Gemma-ready Monitoring MVP</p>
+          <h1>Sanitation and unattended-item alerts from filtered camera events.</h1>
+          <p>
+            This dashboard shows only scenes that passed lightweight trigger logic, so operators see the events that matter instead of watching raw feeds all day.
+          </p>
+        </div>
+        <div class="panel hero-stats">
+          <div class="metric">
+            <div class="label">Escalated Incidents</div>
+            <div class="value" id="metric-total">0</div>
+            <div class="detail">Flagged after motion, object persistence, or separation triggers.</div>
+          </div>
+          <div class="metric">
+            <div class="label">High Severity</div>
+            <div class="value" id="metric-high">0</div>
+            <div class="detail">Incidents requiring security or urgent staff review.</div>
+          </div>
+          <div class="metric">
+            <div class="label">Litter Alerts</div>
+            <div class="value" id="metric-litter">0</div>
+            <div class="detail">Cleanup-focused events detected in monitored zones.</div>
+          </div>
+          <div class="metric">
+            <div class="label">Active Zones</div>
+            <div class="value" id="metric-zones">0</div>
+            <div class="detail">Distinct camera zones represented in the queue.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="layout">
+        <div class="stack">
+          <div class="panel section">
+            <p class="eyebrow">Operational Summary</p>
+            <h2>Recommended response</h2>
+            <div class="summary-list" id="summary-list"></div>
+          </div>
+
+          <div class="panel section">
+            <p class="eyebrow">Incident Feed</p>
+            <h2>Latest events</h2>
+            <div class="feed" id="feed"></div>
+          </div>
+        </div>
+
+        <div class="panel section">
+          <p class="eyebrow">Incident Queue</p>
+          <h2>Escalated review cards</h2>
+          <div class="incident-grid" id="incident-grid"></div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      const severityClass = (severity) => `severity-${severity || "low"}`;
+
+      const groupCounts = (items, key) => {
+        const counts = new Map();
+        items.forEach((item) => counts.set(item[key], (counts.get(item[key]) || 0) + 1));
+        return Array.from(counts.entries()).sort((a, b) => b[1] - a[1]);
+      };
+
+      const renderDashboard = (incidents) => {
+        const total = incidents.length;
+        const high = incidents.filter((item) => item.severity === "high").length;
+        const litter = incidents.filter((item) => item.label === "littering").length;
+        const zones = new Set(incidents.map((item) => item.zone)).size;
+
+        document.getElementById("metric-total").textContent = total;
+        document.getElementById("metric-high").textContent = high;
+        document.getElementById("metric-litter").textContent = litter;
+        document.getElementById("metric-zones").textContent = zones;
+        document.getElementById("timestamp").textContent = `Updated from demo output • ${new Date().toLocaleString()}`;
+
+        const summaryList = document.getElementById("summary-list");
+        const topLabels = groupCounts(incidents, "label");
+        const topZones = groupCounts(incidents, "zone");
+        const summaryItems = [
+          {
+            title: "Primary pattern",
+            body: topLabels[0] ? `${topLabels[0][0].replaceAll("_", " ")} appears most often in the current incident queue.` : "No incidents loaded yet."
+          },
+          {
+            title: "Most active zone",
+            body: topZones[0] ? `${topZones[0][0].replaceAll("_", " ")} has the highest number of escalated events.` : "No zone activity available."
+          },
+          {
+            title: "Recommended staffing",
+            body: high > 0 ? `Security review is needed for ${high} high-severity event${high === 1 ? "" : "s"}.` : "Current queue is cleanup-focused and does not include high-severity events."
+          }
+        ];
+
+        summaryList.innerHTML = summaryItems.map((item) => `
+          <div class="summary-item">
+            <strong>${item.title}</strong>
+            <span>${item.body}</span>
+          </div>
+        `).join("");
+
+        const feed = document.getElementById("feed");
+        feed.innerHTML = incidents.length ? incidents.map((incident) => `
+          <div class="feed-item">
+            <div class="time">${incident.timestamp}</div>
+            <strong>${incident.label.replaceAll("_", " ")} detected</strong>
+            <div class="meta">${incident.camera_id} • ${incident.zone.replaceAll("_", " ")} • ${Math.round(incident.confidence * 100)}% confidence</div>
+          </div>
+        `).join("") : `<div class="empty">Run the demo to populate the incident feed.</div>`;
+
+        const grid = document.getElementById("incident-grid");
+        grid.innerHTML = incidents.length ? incidents.map((incident) => `
+          <article class="incident-card">
+            <div class="incident-top">
+              <div>
+                <p class="eyebrow">${incident.incident_id}</p>
+                <h3>${incident.label.replaceAll("_", " ")}</h3>
+              </div>
+              <span class="badge ${severityClass(incident.severity)}">${incident.severity} severity</span>
+            </div>
+            <div class="incident-meta">
+              <div class="meta-box">
+                <div class="k">Camera</div>
+                <div class="v">${incident.camera_id}</div>
+              </div>
+              <div class="meta-box">
+                <div class="k">Zone</div>
+                <div class="v">${incident.zone.replaceAll("_", " ")}</div>
+              </div>
+              <div class="meta-box">
+                <div class="k">Object</div>
+                <div class="v">${incident.object_label}</div>
+              </div>
+              <div class="meta-box">
+                <div class="k">Confidence</div>
+                <div class="v">${Math.round(incident.confidence * 100)}%</div>
+              </div>
+            </div>
+            <p>${incident.rationale}</p>
+            <div class="chips">
+              ${incident.trigger_reasons.map((reason) => `<span class="chip">${reason}</span>`).join("")}
+            </div>
+          </article>
+        `).join("") : `<div class="empty">No incidents available yet.</div>`;
+      };
+
+      fetch("../output/incidents.json")
+        .then((response) => response.json())
+        .then((incidents) => renderDashboard(incidents))
+        .catch(() => renderDashboard([]));
+    </script>
+  </body>
+</html>
